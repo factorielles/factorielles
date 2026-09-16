@@ -101,7 +101,39 @@
     padding:6px 12px;
     font-size:0.85rem;
     border-bottom:1px solid #ccc;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
   }
+  .np-toolbar .menu-labels{
+    display:flex;
+    gap:14px;
+    color:#555;
+  }
+  .np-btns{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-left:auto;
+  }
+  .np-btns button{
+    background:#fff;
+    border:1px solid #bbb;
+    border-radius:4px;
+    padding:4px 9px;
+    font-size:0.85rem;
+    cursor:pointer;
+    color:#222;
+  }
+  .np-btns button:hover{background:#e8e8e8;}
+  .np-zoom-label{
+    font-family:'Consolas', monospace;
+    min-width:40px;
+    text-align:center;
+    color:#333;
+  }
+  #np-file-input{display:none;}
   #notepad-text{
     flex:1;
     border:none;
@@ -113,6 +145,15 @@
     line-height:1.5;
     background:#fdf6e3;
     color:#111;
+  }
+  .np-statusbar{
+    background:#f3f3f3;
+    color:#555;
+    font-size:0.78rem;
+    padding:4px 12px;
+    border-top:1px solid #ccc;
+    display:flex;
+    justify-content:space-between;
   }
 </style>
 </head>
@@ -168,18 +209,85 @@
     <span>Sans titre - Bloc-notes</span>
     <span class="close" id="np-close">✕</span>
   </div>
-  <div class="np-toolbar">Fichier&nbsp;&nbsp;Modifier&nbsp;&nbsp;Format&nbsp;&nbsp;Affichage&nbsp;&nbsp;Aide</div>
-  <textarea id="notepad-text" autofocus></textarea>
+  <div class="np-toolbar">
+    <div class="menu-labels">
+      <span>Fichier</span><span>Modifier</span><span>Format</span><span>Affichage</span><span>Aide</span>
+    </div>
+    <div class="np-btns">
+      <button id="np-new" title="Effacer et recommencer">Nouveau</button>
+      <button id="np-open" title="Importer un fichier .txt">Ouvrir</button>
+      <button id="np-save" title="Télécharger en .txt">Enregistrer</button>
+      <button id="np-zoom-out" title="Réduire">A−</button>
+      <span class="np-zoom-label" id="np-zoom-label">100%</span>
+      <button id="np-zoom-in" title="Agrandir">A+</button>
+    </div>
+    <input type="file" id="np-file-input" accept=".txt,text/plain">
+  </div>
+  <textarea id="notepad-text" autofocus spellcheck="false"></textarea>
+  <div class="np-statusbar">
+    <span id="np-status">Sauvegarde automatique activée</span>
+    <span id="np-count">0 caractères</span>
+  </div>
 </div>
 
 <script>
   const pressed = new Set();
   const overlay = document.getElementById('notepad-overlay');
   const textarea = document.getElementById('notepad-text');
+  const statusEl = document.getElementById('np-status');
+  const countEl = document.getElementById('np-count');
+  const zoomLabel = document.getElementById('np-zoom-label');
+  const fileInput = document.getElementById('np-file-input');
+
+  const STORAGE_KEY = 'hidden-notepad-content';
+  const ZOOM_KEY = 'hidden-notepad-zoom';
+  let zoom = 100;
+  let saveTimer = null;
+
+  function safeGet(key){
+    try{ return localStorage.getItem(key); }catch(e){ return null; }
+  }
+  function safeSet(key, val){
+    try{ localStorage.setItem(key, val); return true; }catch(e){ return false; }
+  }
+
+  function updateCount(){
+    const n = textarea.value.length;
+    countEl.textContent = n + ' caractère' + (n === 1 ? '' : 's');
+  }
+
+  function applyZoom(){
+    textarea.style.fontSize = zoom + '%';
+    zoomLabel.textContent = zoom + '%';
+    safeSet(ZOOM_KEY, String(zoom));
+  }
+
+  function scheduleSave(){
+    statusEl.textContent = 'Enregistrement...';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>{
+      const ok = safeSet(STORAGE_KEY, textarea.value);
+      statusEl.textContent = ok ? 'Enregistré automatiquement' : 'Sauvegarde locale indisponible';
+    }, 400);
+  }
+
+  function loadSaved(){
+    const saved = safeGet(STORAGE_KEY);
+    if(saved !== null){
+      textarea.value = saved;
+    }
+    const savedZoom = safeGet(ZOOM_KEY);
+    if(savedZoom){
+      zoom = parseInt(savedZoom, 10) || 100;
+    }
+    applyZoom();
+    updateCount();
+  }
 
   function checkCombo(){
     if(pressed.has('KeyY') && pressed.has('KeyH') && pressed.has('Digit8')){
       overlay.classList.add('active');
+      loadSaved();
       setTimeout(()=> textarea.focus(), 50);
     }
   }
@@ -187,6 +295,17 @@
   window.addEventListener('keydown', (e)=>{
     pressed.add(e.code);
     checkCombo();
+    // shortcuts only matter while the notepad is open
+    if(overlay.classList.contains('active')){
+      if(e.ctrlKey && e.code === 'KeyS'){
+        e.preventDefault();
+        downloadTxt();
+      }
+      if(e.ctrlKey && e.code === 'KeyO'){
+        e.preventDefault();
+        fileInput.click();
+      }
+    }
   });
 
   window.addEventListener('keyup', (e)=>{
@@ -198,6 +317,71 @@
   document.getElementById('np-close').addEventListener('click', ()=>{
     overlay.classList.remove('active');
   });
+
+  textarea.addEventListener('input', ()=>{
+    updateCount();
+    scheduleSave();
+  });
+
+  document.getElementById('np-new').addEventListener('click', ()=>{
+    if(textarea.value.trim().length === 0 || confirm('Effacer le contenu actuel ?')){
+      textarea.value = '';
+      updateCount();
+      scheduleSave();
+      textarea.focus();
+    }
+  });
+
+  document.getElementById('np-open').addEventListener('click', ()=> fileInput.click());
+
+  fileInput.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      textarea.value = ev.target.result;
+      updateCount();
+      scheduleSave();
+    };
+    reader.onerror = ()=>{
+      statusEl.textContent = "Erreur lors de l'import";
+    };
+    reader.readAsText(file);
+    fileInput.value = '';
+  });
+
+  function downloadTxt(){
+    const blob = new Blob([textarea.value], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'notes.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    statusEl.textContent = 'Fichier téléchargé';
+  }
+
+  document.getElementById('np-save').addEventListener('click', downloadTxt);
+
+  document.getElementById('np-zoom-in').addEventListener('click', ()=>{
+    zoom = Math.min(zoom + 10, 300);
+    applyZoom();
+  });
+  document.getElementById('np-zoom-out').addEventListener('click', ()=>{
+    zoom = Math.max(zoom - 10, 50);
+    applyZoom();
+  });
+
+  // Ctrl + wheel zoom while over the textarea
+  textarea.addEventListener('wheel', (e)=>{
+    if(e.ctrlKey){
+      e.preventDefault();
+      zoom = Math.min(Math.max(zoom + (e.deltaY < 0 ? 10 : -10), 50), 300);
+      applyZoom();
+    }
+  }, {passive:false});
 </script>
 
 </body>
