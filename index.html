@@ -305,8 +305,15 @@
         e.preventDefault();
         fileInput.click();
       }
+      if(e.code === 'Escape'){
+        e.preventDefault();
+        overlay.classList.remove('active');
+      }
     }
   });
+
+  // Disable right-click / context menu everywhere on the page
+  document.addEventListener('contextmenu', (e)=> e.preventDefault());
 
   window.addEventListener('keyup', (e)=>{
     pressed.delete(e.code);
