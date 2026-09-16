@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qu'est-ce que la factorielle ?</title>
+<style>
+  :root{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --accent:#38bdf8;
+    --accent2:#a78bfa;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', system-ui, sans-serif;
+    background:linear-gradient(160deg,#0f172a,#1e1b4b);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:40px 16px;
+  }
+  .wrap{max-width:760px; width:100%;}
+  h1{
+    font-size:2.2rem;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:4px;
+  }
+  .subtitle{color:var(--muted); margin-bottom:32px;}
+  .card{
+    background:var(--card);
+    border:1px solid #334155;
+    border-radius:14px;
+    padding:24px 28px;
+    margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  }
+  .card h2{margin-top:0; color:var(--accent);}
+  .formula{
+    font-size:1.4rem;
+    background:#0f172a;
+    border-radius:10px;
+    padding:14px 18px;
+    text-align:center;
+    color:var(--accent2);
+    letter-spacing:1px;
+    margin:16px 0;
+  }
+  .example{
+    font-family:'Cascadia Code', monospace;
+    background:#0f172a;
+    padding:12px 16px;
+    border-radius:8px;
+    color:#86efac;
+    overflow-x:auto;
+  }
+  ul{color:var(--text); line-height:1.7;}
+  footer{
+    text-align:center;
+    color:#475569;
+    font-size:0.85rem;
+    margin-top:30px;
+  }
+
+  /* ---- Notepad overlay ---- */
+  #notepad-overlay{
+    position:fixed;
+    inset:0;
+    background:#fdf6e3;
+    display:none;
+    flex-direction:column;
+    z-index:999;
+  }
+  #notepad-overlay.active{display:flex;}
+  .np-titlebar{
+    background:#2d2d2d;
+    color:#fff;
+    padding:8px 14px;
+    font-family:'Segoe UI', sans-serif;
+    font-size:0.9rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .np-titlebar span.close{
+    cursor:pointer;
+    padding:2px 8px;
+    border-radius:4px;
+  }
+  .np-titlebar span.close:hover{background:#e81123;}
+  .np-toolbar{
+    background:#f3f3f3;
+    color:#333;
+    padding:6px 12px;
+    font-size:0.85rem;
+    border-bottom:1px solid #ccc;
+  }
+  #notepad-text{
+    flex:1;
+    border:none;
+    outline:none;
+    resize:none;
+    padding:16px;
+    font-family:'Consolas', 'Courier New', monospace;
+    font-size:1rem;
+    line-height:1.5;
+    background:#fdf6e3;
+    color:#111;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>La Factorielle</h1>
+  <p class="subtitle">Une notion fondamentale en mathématiques et en dénombrement.</p>
+
+  <div class="card">
+    <h2>Définition</h2>
+    <p>
+      La <strong>factorielle</strong> d'un nombre entier positif <em>n</em>, notée <strong>n!</strong>,
+      est le produit de tous les entiers positifs inférieurs ou égaux à <em>n</em>.
+    </p>
+    <div class="formula">n! = n × (n − 1) × (n − 2) × ... × 2 × 1</div>
+    <p>Par convention, on définit aussi :</p>
+    <div class="formula">0! = 1</div>
+  </div>
+
+  <div class="card">
+    <h2>Exemple</h2>
+    <p>Calculons 5! :</p>
+    <div class="example">
+5! = 5 × 4 × 3 × 2 × 1<br>
+5! = 120
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>À quoi ça sert ?</h2>
+    <ul>
+      <li>Compter le nombre de façons d'ordonner des objets (permutations)</li>
+      <li>Calculer des combinaisons et des probabilités</li>
+      <li>Développer des séries mathématiques, comme la série de Taylor</li>
+      <li>Résoudre des problèmes de dénombrement en informatique</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Formule récursive</h2>
+    <p>La factorielle peut aussi être définie de façon récursive :</p>
+    <div class="formula">n! = n × (n − 1)!</div>
+    <p>avec la condition de base <strong>0! = 1</strong>.</p>
+  </div>
+
+  <footer>Page éducative sur la factorielle</footer>
+</div>
+
+<!-- Hidden notepad overlay -->
+<div id="notepad-overlay">
+  <div class="np-titlebar">
+    <span>Sans titre - Bloc-notes</span>
+    <span class="close" id="np-close">✕</span>
+  </div>
+  <div class="np-toolbar">Fichier&nbsp;&nbsp;Modifier&nbsp;&nbsp;Format&nbsp;&nbsp;Affichage&nbsp;&nbsp;Aide</div>
+  <textarea id="notepad-text" autofocus></textarea>
+</div>
+
+<script>
+  const pressed = new Set();
+  const overlay = document.getElementById('notepad-overlay');
+  const textarea = document.getElementById('notepad-text');
+
+  function checkCombo(){
+    if(pressed.has('KeyY') && pressed.has('KeyH') && pressed.has('Digit8')){
+      overlay.classList.add('active');
+      setTimeout(()=> textarea.focus(), 50);
+    }
+  }
+
+  window.addEventListener('keydown', (e)=>{
+    pressed.add(e.code);
+    checkCombo();
+  });
+
+  window.addEventListener('keyup', (e)=>{
+    pressed.delete(e.code);
+  });
+
+  window.addEventListener('blur', ()=> pressed.clear());
+
+  document.getElementById('np-close').addEventListener('click', ()=>{
+    overlay.classList.remove('active');
+  });
+</script>
+
+</body>
+</html>
