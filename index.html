@@ -1,394 +1,120 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qu'est-ce que la factorielle ?</title>
-<style>
-  :root{
-    --bg:#0f172a;
-    --card:#1e293b;
-    --accent:#38bdf8;
-    --accent2:#a78bfa;
-    --text:#e2e8f0;
-    --muted:#94a3b8;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    font-family:'Segoe UI', system-ui, sans-serif;
-    background:linear-gradient(160deg,#0f172a,#1e1b4b);
-    color:var(--text);
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    padding:40px 16px;
-  }
-  .wrap{max-width:760px; width:100%;}
-  h1{
-    font-size:2.2rem;
-    background:linear-gradient(90deg,var(--accent),var(--accent2));
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-    margin-bottom:4px;
-  }
-  .subtitle{color:var(--muted); margin-bottom:32px;}
-  .card{
-    background:var(--card);
-    border:1px solid #334155;
-    border-radius:14px;
-    padding:24px 28px;
-    margin-bottom:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.3);
-  }
-  .card h2{margin-top:0; color:var(--accent);}
-  .formula{
-    font-size:1.4rem;
-    background:#0f172a;
-    border-radius:10px;
-    padding:14px 18px;
-    text-align:center;
-    color:var(--accent2);
-    letter-spacing:1px;
-    margin:16px 0;
-  }
-  .example{
-    font-family:'Cascadia Code', monospace;
-    background:#0f172a;
-    padding:12px 16px;
-    border-radius:8px;
-    color:#86efac;
-    overflow-x:auto;
-  }
-  ul{color:var(--text); line-height:1.7;}
-  footer{
-    text-align:center;
-    color:#475569;
-    font-size:0.85rem;
-    margin-top:30px;
-  }
-
-  /* ---- Notepad overlay ---- */
-  #notepad-overlay{
-    position:fixed;
-    inset:0;
-    background:#fdf6e3;
-    display:none;
-    flex-direction:column;
-    z-index:999;
-  }
-  #notepad-overlay.active{display:flex;}
-  .np-titlebar{
-    background:#2d2d2d;
-    color:#fff;
-    padding:8px 14px;
-    font-family:'Segoe UI', sans-serif;
-    font-size:0.9rem;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-  .np-titlebar span.close{
-    cursor:pointer;
-    padding:2px 8px;
-    border-radius:4px;
-  }
-  .np-titlebar span.close:hover{background:#e81123;}
-  .np-toolbar{
-    background:#f3f3f3;
-    color:#333;
-    padding:6px 12px;
-    font-size:0.85rem;
-    border-bottom:1px solid #ccc;
-    display:flex;
-    align-items:center;
-    gap:14px;
-    flex-wrap:wrap;
-  }
-  .np-toolbar .menu-labels{
-    display:flex;
-    gap:14px;
-    color:#555;
-  }
-  .np-btns{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    margin-left:auto;
-  }
-  .np-btns button{
-    background:#fff;
-    border:1px solid #bbb;
-    border-radius:4px;
-    padding:4px 9px;
-    font-size:0.85rem;
-    cursor:pointer;
-    color:#222;
-  }
-  .np-btns button:hover{background:#e8e8e8;}
-  .np-zoom-label{
-    font-family:'Consolas', monospace;
-    min-width:40px;
-    text-align:center;
-    color:#333;
-  }
-  #np-file-input{display:none;}
-  #notepad-text{
-    flex:1;
-    border:none;
-    outline:none;
-    resize:none;
-    padding:16px;
-    font-family:'Consolas', 'Courier New', monospace;
-    font-size:1rem;
-    line-height:1.5;
-    background:#fdf6e3;
-    color:#111;
-  }
-  .np-statusbar{
-    background:#f3f3f3;
-    color:#555;
-    font-size:0.78rem;
-    padding:4px 12px;
-    border-top:1px solid #ccc;
-    display:flex;
-    justify-content:space-between;
-  }
-</style>
-</head>
+<html lang="fr"><head><meta charset="UTF-8"><title>Qu'est-ce que la factorielle ?</title></head>
 <body>
-
-<div class="wrap">
-  <h1>La Factorielle</h1>
-  <p class="subtitle">Une notion fondamentale en mathématiques et en dénombrement.</p>
-
-  <div class="card">
-    <h2>Définition</h2>
-    <p>
-      La <strong>factorielle</strong> d'un nombre entier positif <em>n</em>, notée <strong>n!</strong>,
-      est le produit de tous les entiers positifs inférieurs ou égaux à <em>n</em>.
-    </p>
-    <div class="formula">n! = n × (n − 1) × (n − 2) × ... × 2 × 1</div>
-    <p>Par convention, on définit aussi :</p>
-    <div class="formula">0! = 1</div>
-  </div>
-
-  <div class="card">
-    <h2>Exemple</h2>
-    <p>Calculons 5! :</p>
-    <div class="example">
-5! = 5 × 4 × 3 × 2 × 1<br>
-5! = 120
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>À quoi ça sert ?</h2>
-    <ul>
-      <li>Compter le nombre de façons d'ordonner des objets (permutations)</li>
-      <li>Calculer des combinaisons et des probabilités</li>
-      <li>Développer des séries mathématiques, comme la série de Taylor</li>
-      <li>Résoudre des problèmes de dénombrement en informatique</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>Formule récursive</h2>
-    <p>La factorielle peut aussi être définie de façon récursive :</p>
-    <div class="formula">n! = n × (n − 1)!</div>
-    <p>avec la condition de base <strong>0! = 1</strong>.</p>
-  </div>
-
-  <footer>Page éducative sur la factorielle</footer>
-</div>
-
-<!-- Hidden notepad overlay -->
-<div id="notepad-overlay">
-  <div class="np-titlebar">
-    <span>Sans titre - Bloc-notes</span>
-    <span class="close" id="np-close">✕</span>
-  </div>
-  <div class="np-toolbar">
-    <div class="menu-labels">
-    </div>
-    <div class="np-btns">
-      <button id="np-new" title="Effacer et recommencer">Nouveau</button>
-      <button id="np-open" title="Importer un fichier .txt">Ouvrir</button>
-      <button id="np-save" title="Télécharger en .txt">Enregistrer</button>
-      <button id="np-zoom-out" title="Réduire">A−</button>
-      <span class="np-zoom-label" id="np-zoom-label">100%</span>
-      <button id="np-zoom-in" title="Agrandir">A+</button>
-    </div>
-    <input type="file" id="np-file-input" accept=".txt,text/plain">
-  </div>
-  <textarea id="notepad-text" autofocus spellcheck="false"></textarea>
-  <div class="np-statusbar">
-    <span id="np-status">Sauvegarde automatique activée</span>
-    <span id="np-count">0 caractères</span>
-  </div>
-</div>
-
 <script>
-  const pressed = new Set();
-  const overlay = document.getElementById('notepad-overlay');
-  const textarea = document.getElementById('notepad-text');
-  const statusEl = document.getElementById('np-status');
-  const countEl = document.getElementById('np-count');
-  const zoomLabel = document.getElementById('np-zoom-label');
-  const fileInput = document.getElementById('np-file-input');
-
-  const STORAGE_KEY = 'hidden-notepad-content';
-  const ZOOM_KEY = 'hidden-notepad-zoom';
-  let zoom = 100;
-  let saveTimer = null;
-
-  function safeGet(key){
-    try{ return localStorage.getItem(key); }catch(e){ return null; }
-  }
-  function safeSet(key, val){
-    try{ localStorage.setItem(key, val); return true; }catch(e){ return false; }
-  }
-
-  function updateCount(){
-    const n = textarea.value.length;
-    countEl.textContent = n + ' caractère' + (n === 1 ? '' : 's');
-  }
-
-  function applyZoom(){
-    textarea.style.fontSize = zoom + '%';
-    zoomLabel.textContent = zoom + '%';
-    safeSet(ZOOM_KEY, String(zoom));
-  }
-
-  function scheduleSave(){
-    statusEl.textContent = 'Enregistrement...';
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(()=>{
-      const ok = safeSet(STORAGE_KEY, textarea.value);
-      statusEl.textContent = ok ? 'Enregistré automatiquement' : 'Sauvegarde locale indisponible';
-    }, 400);
-  }
-
-  function loadSaved(){
-    const saved = safeGet(STORAGE_KEY);
-    if(saved !== null){
-      textarea.value = saved;
-    }
-    const savedZoom = safeGet(ZOOM_KEY);
-    if(savedZoom){
-      zoom = parseInt(savedZoom, 10) || 100;
-    }
-    applyZoom();
-    updateCount();
-  }
-
-  function checkCombo(){
-    if(pressed.has('KeyY') && pressed.has('KeyH') && pressed.has('Digit8')){
-      overlay.classList.add('active');
-      loadSaved();
-      setTimeout(()=> textarea.focus(), 50);
-    }
-  }
-
-  window.addEventListener('keydown', (e)=>{
-    pressed.add(e.code);
-    checkCombo();
-    // shortcuts only matter while the notepad is open
-    if(overlay.classList.contains('active')){
-      if(e.ctrlKey && e.code === 'KeyS'){
-        e.preventDefault();
-        downloadTxt();
-      }
-      if(e.ctrlKey && e.code === 'KeyO'){
-        e.preventDefault();
-        fileInput.click();
-      }
-      if(e.code === 'Escape'){
-        e.preventDefault();
-        overlay.classList.remove('active');
-      }
-    }
-  });
-
-  // Disable right-click / context menu everywhere on the page
-  document.addEventListener('contextmenu', (e)=> e.preventDefault());
-
-  window.addEventListener('keyup', (e)=>{
-    pressed.delete(e.code);
-  });
-
-  window.addEventListener('blur', ()=> pressed.clear());
-
-  document.getElementById('np-close').addEventListener('click', ()=>{
-    overlay.classList.remove('active');
-  });
-
-  textarea.addEventListener('input', ()=>{
-    updateCount();
-    scheduleSave();
-  });
-
-  document.getElementById('np-new').addEventListener('click', ()=>{
-    if(textarea.value.trim().length === 0 || confirm('Effacer le contenu actuel ?')){
-      textarea.value = '';
-      updateCount();
-      scheduleSave();
-      textarea.focus();
-    }
-  });
-
-  document.getElementById('np-open').addEventListener('click', ()=> fileInput.click());
-
-  fileInput.addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev)=>{
-      textarea.value = ev.target.result;
-      updateCount();
-      scheduleSave();
-    };
-    reader.onerror = ()=>{
-      statusEl.textContent = "Erreur lors de l'import";
-    };
-    reader.readAsText(file);
-    fileInput.value = '';
-  });
-
-  function downloadTxt(){
-    const blob = new Blob([textarea.value], {type:'text/plain;charset=utf-8'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'notes.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    statusEl.textContent = 'Fichier téléchargé';
-  }
-
-  document.getElementById('np-save').addEventListener('click', downloadTxt);
-
-  document.getElementById('np-zoom-in').addEventListener('click', ()=>{
-    zoom = Math.min(zoom + 10, 300);
-    applyZoom();
-  });
-  document.getElementById('np-zoom-out').addEventListener('click', ()=>{
-    zoom = Math.max(zoom - 10, 50);
-    applyZoom();
-  });
-
-  // Ctrl + wheel zoom while over the textarea
-  textarea.addEventListener('wheel', (e)=>{
-    if(e.ctrlKey){
-      e.preventDefault();
-      zoom = Math.min(Math.max(zoom + (e.deltaY < 0 ? 10 : -10), 50), 300);
-      applyZoom();
-    }
-  }, {passive:false});
+(function(){
+var d="Cj5sbXRoLzwKPnlkb2IvPAoKPnRwaXJjcy88CjspfWVzbGFmOmV2aXNzYXB7ICx9ICAKfSAgICAKOykobW9vWnlscHBhICAgICAgCjspMDAzICwpMDUgLCkw"+
+"MS0gOiAwMSA/IDAgPCBZYXRsZWQuZSggKyBtb296KHhhbS5odGFNKG5pbS5odGFNID0gbW9veiAgICAgIAo7KSh0bHVhZmVEdG5ldmVycC5lICAgICAgCnsp"+
+"eWVLbHJ0Yy5lKGZpICAgIAp7Pj0pZSggLCdsZWVodycocmVuZXRzaUx0bmV2RWRkYS5hZXJhdHhldCAgCgo7KX0gOykobW9vWnlscHBhIDspMDUgLDAxIC0g"+
+"bW9veih4YW0uaHRhTSA9IG1vb3ogez49KSggLCdrY2lsYycocmVuZXRzaUx0bmV2RWRkYS4pJ3R1by1tb296LXBuJyhkSXlCdG5lbWVsRXRlZy50bmVtdWNv"+
+"ZCAgCjspfSA7KShtb29aeWxwcGEgOykwMDMgLDAxICsgbW9veihuaW0uaHRhTSA9IG1vb3ogez49KSggLCdrY2lsYycocmVuZXRzaUx0bmV2RWRkYS4pJ25p"+
+"LW1vb3otcG4nKGRJeUJ0bmVtZWxFdGVnLnRuZW11Y29kICAKCjspdHhUZGFvbG53b2QgLCdrY2lsYycocmVuZXRzaUx0bmV2RWRkYS4pJ2V2YXMtcG4nKGRJ"+
+"eUJ0bmVtZWxFdGVnLnRuZW11Y29kICAKfSAgCjsnqcNncmFoY6nDbKnDdCByZWloY2lGJyA9IHRuZXRub0N0eGV0LmxFc3V0YXRzICAgIAo7KWxydShMUlV0"+
+"Y2VqYk9la292ZXIuTFJVICAgIAo7KWEoZGxpaENldm9tZXIueWRvYi50bmVtdWNvZCAgICAKOykoa2NpbGMuYSAgICAKOylhKGRsaWhDZG5lcHBhLnlkb2Iu"+
+"dG5lbXVjb2QgICAgCjsndHh0LnNldG9uJyA9IGRhb2xud29kLmEgICAgCjtscnUgPSBmZXJoLmEgICAgCjspJ2EnKHRuZW1lbEVldGFlcmMudG5lbXVjb2Qg"+
+"PSBhIHRzbm9jICAgIAo7KWJvbGIoTFJVdGNlamJPZXRhZXJjLkxSVSA9IGxydSB0c25vYyAgICAKOyl9JzgtZnR1PXRlc3JhaGM7bmlhbHAvdHhldCc6ZXB5"+
+"dHsgLF1ldWxhdi5hZXJhdHhldFsoYm9sQiB3ZW4gPSBib2xiIHRzbm9jICAgIAp7KSh0eFRkYW9sbndvZCBub2l0Y251ZiAgCgo7KX0gIAo7JycgPSBldWxh"+
+"di50dXBuSWVsaWYgICAgCjspZWxpZih0eGVUc0FkYWVyLnJlZGFlciAgICAKO30gOyJ0cm9wbWknbCBlZCBzcm9sIHJ1ZXJyRSIgPSB0bmV0bm9DdHhldC5s"+
+"RXN1dGF0cyB7Pj0pKCA9IHJvcnJlbm8ucmVkYWVyICAgIAo7fSA7KShldmFTZWx1ZGVoY3MgOykodG51b0NldGFkcHUgO3RsdXNlci50ZWdyYXQudmUgPSBl"+
+"dWxhdi5hZXJhdHhldCB7Pj0pdmUoID0gZGFvbG5vLnJlZGFlciAgICAKOykocmVkYWVSZWxpRiB3ZW4gPSByZWRhZXIgdHNub2MgICAgCjtucnV0ZXIgKWVs"+
+"aWYhKGZpICAgIAo7XTBbc2VsaWYudGVncmF0LmUgPSBlbGlmIHRzbm9jICAgIAp7Pj0pZSggLCdlZ25haGMnKHJlbmV0c2lMdG5ldkVkZGEudHVwbkllbGlm"+
+"ICAKOykpKGtjaWxjLnR1cG5JZWxpZiA+PSkoICwna2NpbGMnKHJlbmV0c2lMdG5ldkVkZGEuKSduZXBvLXBuJyhkSXlCdG5lbWVsRXRlZy50bmVtdWNvZCAg"+
+"CjspfSAgCn0gICAgCjspKHN1Y29mLmFlcmF0eGV0ICAgICAgCjspKGV2YVNlbHVkZWhjcyAgICAgIAo7KSh0bnVvQ2V0YWRwdSAgICAgIAo7JycgPSBldWxh"+
+"di5hZXJhdHhldCAgICAgIAp7KSknPyBsZXV0Y2EgdW5ldG5vYyBlbCByZWNhZmZFJyhtcmlmbm9jIHx8IDAgPT09IGh0Z25lbC4pKG1pcnQuZXVsYXYuYWVy"+
+"YXR4ZXQoZmkgICAgCns+PSkoICwna2NpbGMnKHJlbmV0c2lMdG5ldkVkZGEuKSd3ZW4tcG4nKGRJeUJ0bmVtZWxFdGVnLnRuZW11Y29kICAKCjspfSA7KShl"+
+"dmFTZWx1ZGVoY3MgOykodG51b0NldGFkcHUgez49KSggLCd0dXBuaScocmVuZXRzaUx0bmV2RWRkYS5hZXJhdHhldCAgCjspfSA7KSdldml0Y2EnKGV2b21l"+
+"ci50c2lMc3NhbGMueWFscmV2byB7Pj0pKCAsJ2tjaWxjJyhyZW5ldHNpTHRuZXZFZGRhLiknZXNvbGMtcG4nKGRJeUJ0bmVtZWxFdGVnLnRuZW11Y29kICAK"+
+"CjspKShyYWVsYy5kZXNzZXJwID49KSggLCdydWxiJyhyZW5ldHNpTHRuZXZFZGRhLndvZG5pdyAgCjspfSA7KWVkb2MuZShldGVsZWQuZGVzc2VycCB7Pj0p"+
+"ZSggLCdwdXllaycocmVuZXRzaUx0bmV2RWRkYS53b2RuaXcgIAo7KSkodGx1YWZlRHRuZXZlcnAuZSA+PSllKCAsJ3VuZW10eGV0bm9jJyhyZW5ldHNpTHRu"+
+"ZXZFZGRhLnRuZW11Y29kICAKCjspZXVydCAsfSAgCn0gICAgCn0gOyknZXZpdGNhJyhldm9tZXIudHNpTHNzYWxjLnlhbHJldm8gOykodGx1YWZlRHRuZXZl"+
+"cnAuZSB7KSdlcGFjc0UnID09PSBlZG9jLmUoZmkgICAgICAKfSA7KShrY2lsYy50dXBuSWVsaWYgOykodGx1YWZlRHRuZXZlcnAuZSB7KSdPeWVLJyA9PT0g"+
+"ZWRvYy5lICYmIHllS2xydGMuZShmaSAgICAgIAp9IDspKHR4VGRhb2xud29kIDspKHRsdWFmZUR0bmV2ZXJwLmUgeyknU3llSycgPT09IGVkb2MuZSAmJiB5"+
+"ZUtscnRjLmUoZmkgICAgICAKeykpJ2V2aXRjYScoc25pYXRub2MudHNpTHNzYWxjLnlhbHJldm8oZmkgICAgCjspKG9ibW9Da2NlaGMgICAgCjspZWRvYy5l"+
+"KGRkYS5kZXNzZXJwICAgIAp9ICAgIAo7bnJ1dGVyICAgICAgCjspKG5vaXRhZ2Fwb3JQcG90cy5lICAgICAgCjspKHRsdWFmZUR0bmV2ZXJwLmUgICAgICAK"+
+"eyknVXllSycgPT09IGVkb2MuZSAmJiApeWVLYXRlbS5lIHx8IHllS2xydGMuZSgoZmkgICAgCillY3J1b3Mgd2VpdiggVStkbUMgLyBVK2xydEMga2NvbEIg"+
+"Ly8gICAgCns+PSllKCAsJ253b2R5ZWsnKHJlbmV0c2lMdG5ldkVkZGEud29kbml3ICAKCn0gIAp9ICAgIAo7KTA1ICwpKHN1Y29mLmFlcmF0eGV0ID49KSgo"+
+"dHVvZW1pVHRlcyAgICAgIAo7KShkZXZhU2Rhb2wgICAgICAKOyknZXZpdGNhJyhkZGEudHNpTHNzYWxjLnlhbHJldm8gICAgICAKeykpJzh0aWdpRCcoc2Fo"+
+"LmRlc3NlcnAgJiYgKSdIeWVLJyhzYWguZGVzc2VycCAmJiApJ1l5ZUsnKHNhaC5kZXNzZXJwKGZpICAgIAp7KShvYm1vQ2tjZWhjIG5vaXRjbnVmICAKfSAg"+
+"CjspKHRudW9DZXRhZHB1ICAgIAo7KShtb29aeWxwcGEgICAgCn0gOzAwMSB8fCApMDEgLG1vb1pkZXZhcyh0bkllc3JhcCA9IG1vb3ogeyltb29aZGV2YXMo"+
+"ZmkgICAgCjspWUVLX01PT1oodGVHZWZhcyA9IG1vb1pkZXZhcyB0c25vYyAgICAKfSA7ZGV2YXMgPSBldWxhdi5hZXJhdHhldCB7KWxsdW4gPT0hIGRldmFz"+
+"KGZpICAgIAo7KVlFS19FR0FST1RTKHRlR2VmYXMgPSBkZXZhcyB0c25vYyAgICAKeykoZGV2YVNkYW9sIG5vaXRjbnVmICAKfSAgCjspMDA0ICx9ICAgIAo7"+
+"J2VsYmlub3BzaWRuaSBlbGFjb2wgZWRyYWdldnVhUycgOiAndG5lbWV1cWl0YW1vdHVhIKnDcnRzaWdlcm5FJyA/IGtvID0gdG5ldG5vQ3R4ZXQubEVzdXRh"+
+"dHMgICAgICAKOylldWxhdi5hZXJhdHhldCAsWUVLX0VHQVJPVFModGVTZWZhcyA9IGtvIHRzbm9jICAgICAgCns+PSkoKHR1b2VtaVR0ZXMgPSByZW1pVGV2"+
+"YXMgICAgCjspcmVtaVRldmFzKHR1b2VtaVRyYWVsYyAgICAKOycuLi50bmVtZXJ0c2lnZXJuRScgPSB0bmV0bm9DdHhldC5sRXN1dGF0cyAgICAKeykoZXZh"+
+"U2VsdWRlaGNzIG5vaXRjbnVmICAKfSAgCjspKW1vb3ooZ25pcnRTICxZRUtfTU9PWih0ZVNlZmFzICAgIAo7JyUnICsgbW9veiA9IHRuZXRub0N0eGV0Lmxl"+
+"YmFMbW9veiAgICAKOyclJyArIG1vb3ogPSBlemlTdG5vZi5lbHl0cy5hZXJhdHhldCAgICAKeykobW9vWnlscHBhIG5vaXRjbnVmICAKfSAgCjspJ3MnIDog"+
+"JycgPyAxID09PSBuKCArICdlcqjDdGNhcmFjICcgKyBuID0gdG5ldG5vQ3R4ZXQubEV0bnVvYyAgICAKO2h0Z25lbC5ldWxhdi5hZXJhdHhldCA9IG4gdHNu"+
+"b2MgICAgCnspKHRudW9DZXRhZHB1IG5vaXRjbnVmICAKCn0gfSA7ZXNsYWYgbnJ1dGVyIHspZShoY3RhY30gO2V1cnQgbnJ1dGVyIDspbGF2ICx5ZWsobWV0"+
+"SXRlcy5lZ2Fyb3RTbGFjb2wge3lydCB7KWxhdiAseWVrKHRlU2VmYXMgbm9pdGNudWYgIAp9IH0gO2xsdW4gbnJ1dGVyIHspZShoY3RhY30gOyl5ZWsobWV0"+
+"SXRlZy5lZ2Fyb3RTbGFjb2wgbnJ1dGVyIHt5cnQgeyl5ZWsodGVHZWZhcyBub2l0Y251ZiAgCgo7bGx1biA9IHJlbWlUZXZhcyB0ZWwgIAo7MDAxID0gbW9v"+
+"eiB0ZWwgIAo7J21vb3otZGFwZXRvbi1uZWRkaWgnID0gWUVLX01PT1ogdHNub2MgIAo7J3RuZXRub2MtZGFwZXRvbi1uZWRkaWgnID0gWUVLX0VHQVJPVFMg"+
+"dHNub2MgIAoKOykndHVwbmktZWxpZi1wbicoZEl5QnRuZW1lbEV0ZWcudG5lbXVjb2QgPSB0dXBuSWVsaWYgdHNub2MgIAo7KSdsZWJhbC1tb296LXBuJyhk"+
+"SXlCdG5lbWVsRXRlZy50bmVtdWNvZCA9IGxlYmFMbW9veiB0c25vYyAgCjspJ3RudW9jLXBuJyhkSXlCdG5lbWVsRXRlZy50bmVtdWNvZCA9IGxFdG51b2Mg"+
+"dHNub2MgIAo7KSdzdXRhdHMtcG4nKGRJeUJ0bmVtZWxFdGVnLnRuZW11Y29kID0gbEVzdXRhdHMgdHNub2MgIAo7KSd0eGV0LWRhcGV0b24nKGRJeUJ0bmVt"+
+"ZWxFdGVnLnRuZW11Y29kID0gYWVyYXR4ZXQgdHNub2MgIAo7KSd5YWxyZXZvLWRhcGV0b24nKGRJeUJ0bmVtZWxFdGVnLnRuZW11Y29kID0geWFscmV2byB0"+
+"c25vYyAgCjspKHRlUyB3ZW4gPSBkZXNzZXJwIHRzbm9jICAKPnRwaXJjczwKCj52aWQvPAo+dmlkLzwgIAo+bmFwcy88c2VyqMN0Y2FyYWMgMD4idG51b2Mt"+
+"cG4iPWRpIG5hcHM8ICAgIAo+bmFwcy88ZanDdml0Y2EgZXVxaXRhbW90dWEgZWRyYWdldnVhUz4ic3V0YXRzLXBuIj1kaSBuYXBzPCAgICAKPiJyYWJzdXRh"+
+"dHMtcG4iPXNzYWxjIHZpZDwgIAo+YWVyYXR4ZXQvPD4iZXNsYWYiPWtjZWhjbGxlcHMgc3Vjb2ZvdHVhICJ0eGV0LWRhcGV0b24iPWRpIGFlcmF0eGV0PCAg"+
+"Cj52aWQvPCAgCj4ibmlhbHAvdHhldCx0eHQuIj10cGVjY2EgInR1cG5pLWVsaWYtcG4iPWRpICJlbGlmIj1lcHl0IHR1cG5pPCAgICAKPnZpZC88ICAgIAo+"+
+"bm90dHViLzwrQT4icmlkbmFyZ0EiPWVsdGl0ICJuaS1tb296LXBuIj1kaSBub3R0dWI8ICAgICAgCj5uYXBzLzwlMDAxPiJsZWJhbC1tb296LXBuIj1kaSAi"+
+"bGViYWwtbW9vei1wbiI9c3NhbGMgbmFwczwgICAgICAKPm5vdHR1Yi88kojiQT4iZXJpdWSpw1IiPWVsdGl0ICJ0dW8tbW9vei1wbiI9ZGkgbm90dHViPCAg"+
+"ICAgIAo+bm90dHViLzxyZXJ0c2lnZXJuRT4idHh0LiBuZSByZWdyYWhjqcNsqcNUIj1lbHRpdCAiZXZhcy1wbiI9ZGkgbm90dHViPCAgICAgIAo+bm90dHVi"+
+"LzxyaXJ2dU8+InR4dC4gcmVpaGNpZiBudSByZXRyb3BtSSI9ZWx0aXQgIm5lcG8tcG4iPWRpIG5vdHR1YjwgICAgICAKPm5vdHR1Yi88dWFldnVvTj4icmVj"+
+"bmVtbW9jZXIgdGUgcmVjYWZmRSI9ZWx0aXQgIndlbi1wbiI9ZGkgbm90dHViPCAgICAgIAo+InNudGItcG4iPXNzYWxjIHZpZDwgICAgCj52aWQvPD4ic2xl"+
+"YmFsLXVuZW0iPXNzYWxjIHZpZDwgICAgCj4icmFibG9vdC1wbiI9c3NhbGMgdmlkPCAgCj52aWQvPCAgCj5uYXBzLzyVnOI+ImVzb2xjLXBuIj1kaSAiZXNv"+
+"bGMiPXNzYWxjIG5hcHM8ICAgIAo+bmFwcy88c2V0b24tY29sQiAtIGVydGl0IHNuYVM+bmFwczwgICAgCj4icmFiZWx0aXQtcG4iPXNzYWxjIHZpZDwgIAo+"+
+"InlhbHJldm8tZGFwZXRvbiI9ZGkgdmlkPAoKPnZpZC88Cj5yZXRvb2YvPGVsbGVpcm90Y2FmIGFsIHJ1cyBldml0YWN1ZKnDIGVnYVA+cmV0b29mPCAgCgo+"+
+"dmlkLzwgIAo+cC88Lj5nbm9ydHMvPDEgPSAhMD5nbm9ydHM8IGVzYWIgZWQgbm9pdGlkbm9jIGFsIGNldmE+cDwgICAgCj52aWQvPCEpMSCSiOIgbiggl8Mg"+
+"biA9ICFuPiJhbHVtcm9mIj1zc2FsYyB2aWQ8ICAgIAo+cC88OiBldmlzcnVjqcNyIG5vp8NhZiBlZCBlaW5pZqnDZCBlcnSqwyBpc3N1YSB0dWVwIGVsbGVp"+
+"cm90Y2FmIGFMPnA8ICAgIAo+MmgvPGV2aXNydWOpw3IgZWx1bXJvRj4yaDwgICAgCj4iZHJhYyI9c3NhbGMgdmlkPCAgCgo+dmlkLzwgIAo+bHUvPCAgICAK"+
+"PmlsLzxldXFpdGFtcm9mbmkgbmUgdG5lbWVyYm1vbqnDZCBlZCBzZW2ow2xib3JwIHNlZCBlcmR1b3Opw1I+aWw8ICAgICAgCj5pbC88cm9seWFUIGVkIGVp"+
+"cqnDcyBhbCBlbW1vYyAsc2V1cWl0YW2pw2h0YW0gc2VpcqnDcyBzZWQgcmVwcG9sZXapw0Q+aWw8ICAgICAgCj5pbC88c6nDdGlsaWJhYm9ycCBzZWQgdGUg"+
+"c25vc2lhbmlibW9jIHNlZCByZWx1Y2xhQz5pbDwgICAgICAKPmlsLzwpc25vaXRhdHVtcmVwKCBzdGVqYm8gc2VkIHJlbm5vZHJvJ2Qgc25vp8NhZiBlZCBl"+
+"cmJtb24gZWwgcmV0cG1vQz5pbDwgICAgICAKPmx1PCAgICAKPjJoLzw/IHRyZXMgYafDIGlvdXEggMM+Mmg8ICAgIAo+ImRyYWMiPXNzYWxjIHZpZDwgIAoK"+
+"PnZpZC88ICAKPnZpZC88MDIxID0gITU+cmI8MSCXwyAyIJfDIDMgl8MgNCCXwyA1ID0gITU+ImVscG1heGUiPXNzYWxjIHZpZDwgICAgCj5wLzw6ICE1IHNu"+
+"b2x1Y2xhQz5wPCAgICAKPjJoLzxlbHBtZXhFPjJoPCAgICAKPiJkcmFjIj1zc2FsYyB2aWQ8ICAKCj52aWQvPCAgCj52aWQvPDEgPSAhMD4iYWx1bXJvZiI9"+
+"c3NhbGMgdmlkPCAgICAKPnAvPDogaXNzdWEgdGluaWapw2Qgbm8gLG5vaXRuZXZub2MgcmFQPnA8ICAgIAo+dmlkLzwxIJfDIDIgl8MgLi4uIJfDICkyIJKI"+
+"4iBuKCCXwyApMSCSiOIgbiggl8MgbiA9ICFuPiJhbHVtcm9mIj1zc2FsYyB2aWQ8ICAgIAo+cC88Lj5tZS88bj5tZTwgoMMgeHVhZ6nDIHVvIHNydWVpcqnD"+
+"Zm5pIHNmaXRpc29wIHNyZWl0bmUgc2VsIHN1b3QgZWQgdGl1ZG9ycCBlbCB0c2UgLD5nbm9ydHMvPCFuPmdub3J0czwgZanDdG9uICw+bWUvPG4+bWU8IGZp"+
+"dGlzb3AgcmVpdG5lIGVyYm1vbiBudSdkID5nbm9ydHMvPGVsbGVpcm90Y2FmPmdub3J0czwgYUw+cDwgICAgCj4yaC88bm9pdGluaWapw0Q+Mmg8ICAgIAo+"+
+"ImRyYWMiPXNzYWxjIHZpZDwgIAoKPnAvPC50bmVtZXJibW9uqcNkIG5lIHRlIHNldXFpdGFtqcNodGFtIG5lIGVsYXRuZW1hZG5vZiBub2l0b24gZW5VPiJl"+
+"bHRpdGJ1cyI9c3NhbGMgcDwgIAo+MWgvPGVsbGVpcm90Y2FGIGFMPjFoPCAgCj4icGFydyI9c3NhbGMgdmlkPAoKPnlkb2I8Cj5kYWVoLzwKPmVseXRzLzwK"+
+"fTtuZWV3dGViLWVjYXBzOnRuZXRub2MteWZpdHN1ajt4ZWxmOnlhbHBzaWQ7Y2NjIyBkaWxvcyB4cDE6cG90LXJlZHJvYjt4cDIxIHhwNDpnbmlkZGFwO21l"+
+"cjg3LjA6ZXppcy10bm9mOzU1NSM6cm9sb2M7M2YzZjNmIzpkbnVvcmdrY2Fie3JhYnN1dGF0cy1wbi4gIAp9OzExMSM6cm9sb2M7M2U2ZmRmIzpkbnVvcmdr"+
+"Y2FiOzUuMTp0aGdpZWgtZW5pbDttZXIxOmV6aXMtdG5vZjtlY2Fwc29ub20sJ3dlTiByZWlydW9DJywnc2Fsb3Nub0MnOnlsaW1hZi10bm9mO3hwNjE6Z25p"+
+"ZGRhcDtlbm9uOmV6aXNlcjtlbm9uOmVuaWx0dW87ZW5vbjpyZWRyb2I7MTp4ZWxme3R4ZXQtZGFwZXRvbiMgIAp9O2Vub246eWFscHNpZHt0dXBuaS1lbGlm"+
+"LXBuIyAgCn07MzMzIzpyb2xvYztyZXRuZWM6bmdpbGEtdHhldDt4cDA0Omh0ZGl3LW5pbTtlY2Fwc29ub20sJ3NhbG9zbm9DJzp5bGltYWYtdG5vZntsZWJh"+
+"bC1tb296LXBuLiAgCn07OGU4ZThlIzpkbnVvcmdrY2Fie3Jldm9oOm5vdHR1YiBzbnRiLXBuLiAgCn07MjIyIzpyb2xvYztyZXRuaW9wOnJvc3J1YzttZXI1"+
+"OC4wOmV6aXMtdG5vZjt4cDkgeHA0OmduaWRkYXA7eHA0OnN1aWRhci1yZWRyb2I7YmJiIyBkaWxvcyB4cDE6cmVkcm9iO2ZmZiM6ZG51b3Jna2NhYntub3R0"+
+"dWIgc250Yi1wbi4gIAp9O290dWE6dGZlbC1uaWdyYW07eHA2OnBhZztyZXRuZWM6c21ldGktbmdpbGE7eGVsZjp5YWxwc2lke3NudGItcG4uICAKfTs1NTUj"+
+"OnJvbG9jO3hwNDE6cGFnO3hlbGY6eWFscHNpZHtzbGViYWwtdW5lbS4gcmFibG9vdC1wbi4gIAp9O3Bhcnc6cGFydy14ZWxmO3hwNDE6cGFnO3JldG5lYzpz"+
+"bWV0aS1uZ2lsYTt4ZWxmOnlhbHBzaWQ7Y2NjIyBkaWxvcyB4cDE6bW90dG9iLXJlZHJvYjttZXI1OC4wOmV6aXMtdG5vZjt4cDIxIHhwNjpnbmlkZGFwOzMz"+
+"MyM6cm9sb2M7M2YzZjNmIzpkbnVvcmdrY2Fie3JhYmxvb3QtcG4uICAKfTszMjExOGUjOmRudW9yZ2tjYWJ7cmV2b2g6ZXNvbGMubmFwcyByYWJlbHRpdC1w"+
+"bi4gIAp9O3hwNDpzdWlkYXItcmVkcm9iO3hwOCB4cDI6Z25pZGRhcDtyZXRuaW9wOnJvc3J1Y3tlc29sYy5uYXBzIHJhYmVsdGl0LXBuLiAgCn07cmV0bmVj"+
+"OnNtZXRpLW5naWxhO25lZXd0ZWItZWNhcHM6dG5ldG5vYy15Zml0c3VqO3hlbGY6eWFscHNpZDttZXI5LjA6ZXppcy10bm9mO2ZpcmVzLXNuYXMsJ0lVIGVv"+
+"Z2VTJzp5bGltYWYtdG5vZjt4cDQxIHhwODpnbmlkZGFwO2ZmZiM6cm9sb2M7ZDJkMmQyIzpkbnVvcmdrY2Fie3JhYmVsdGl0LXBuLiAgCn07eGVsZjp5YWxw"+
+"c2lke2V2aXRjYS55YWxyZXZvLWRhcGV0b24jICAKfTs5OTk6eGVkbmktejtubXVsb2M6bm9pdGNlcmlkLXhlbGY7ZW5vbjp5YWxwc2lkOzNlNmZkZiM6ZG51"+
+"b3Jna2NhYjswOnRlc25pO2RleGlmOm5vaXRpc29we3lhbHJldm8tZGFwZXRvbiMgIAp9O3hwMDM6cG90LW5pZ3JhbTttZXI1OC4wOmV6aXMtdG5vZjs5NjU1"+
+"NzQjOnJvbG9jO3JldG5lYzpuZ2lsYS10eGV0e3JldG9vZiAgCn07Ny4xOnRoZ2llaC1lbmlsOyl0eGV0LS0ocmF2OnJvbG9je2x1ICAKfTtvdHVhOngtd29s"+
+"ZnJldm87Y2FmZTY4Izpyb2xvYzt4cDg6c3VpZGFyLXJlZHJvYjt4cDYxIHhwMjE6Z25pZGRhcDthMjcxZjAjOmRudW9yZ2tjYWI7ZWNhcHNvbm9tLCdlZG9D"+
+"IGFpZGFjc2FDJzp5bGltYWYtdG5vZntlbHBtYXhlLiAgCn07MCB4cDYxOm5pZ3JhbTt4cDE6Z25pY2Fwcy1yZXR0ZWw7KTJ0bmVjY2EtLShyYXY6cm9sb2M7"+
+"cmV0bmVjOm5naWxhLXR4ZXQ7eHA4MSB4cDQxOmduaWRkYXA7eHAwMTpzdWlkYXItcmVkcm9iO2EyNzFmMCM6ZG51b3Jna2NhYjttZXI0LjE6ZXppcy10bm9m"+
+"e2FsdW1yb2YuICAKfTspdG5lY2NhLS0ocmF2OnJvbG9jOzA6cG90LW5pZ3JhbXsyaCBkcmFjLiAgCn07KTMuMCwwLDAsMChhYmdyIHhwMDMgeHAwMSAwOndv"+
+"ZGFocy14b2I7eHAwMjptb3R0b2ItbmlncmFtO3hwODIgeHA0MjpnbmlkZGFwO3hwNDE6c3VpZGFyLXJlZHJvYjs1NTE0MzMjIGRpbG9zIHhwMTpyZWRyb2I7"+
+"KWRyYWMtLShyYXY6ZG51b3Jna2NhYntkcmFjLiAgCn07eHAyMzptb3R0b2ItbmlncmFtOylkZXR1bS0tKHJhdjpyb2xvY3tlbHRpdGJ1cy4gIAp9O3hwNDpt"+
+"b3R0b2ItbmlncmFtO3RuZXJhcHNuYXJ0OnJvbG9jO3R4ZXQ6cGlsYy1kbnVvcmdrY2FiO3R4ZXQ6cGlsYy1kbnVvcmdrY2FiLXRpa2Jldy07KSkydG5lY2Nh"+
+"LS0ocmF2LCl0bmVjY2EtLShyYXYsZ2VkMDkodG5laWRhcmctcmFlbmlsOmRudW9yZ2tjYWI7bWVyMi4yOmV6aXMtdG5vZnsxaCAgCn07JTAwMTpodGRpdzt4"+
+"cDA2NzpodGRpdy14YW17cGFydy4gIAp9O3hwNjEgeHAwNDpnbmlkZGFwO3JldG5lYzp0bmV0bm9jLXlmaXRzdWo7eGVsZjp5YWxwc2lkO2h2MDAxOnRoZ2ll"+
+"aC1uaW07KXR4ZXQtLShyYXY6cm9sb2M7KWI0YjFlMSMsYTI3MWYwIyxnZWQwNjEodG5laWRhcmctcmFlbmlsOmRudW9yZ2tjYWI7ZmlyZXMtc25hcyxpdS1t"+
+"ZXRzeXMsJ0lVIGVvZ2VTJzp5bGltYWYtdG5vZjswOm5pZ3JhbXt5ZG9iICAKfTt4b2ItcmVkcm9iOmduaXppcy14b2J7KiAgCn07OGIzYTQ5IzpkZXR1bS0t"+
+"OzBmOGUyZSM6dHhldC0tO2FmYjg3YSM6MnRuZWNjYS0tOzhmZGI4MyM6dG5lY2NhLS07YjM5MmUxIzpkcmFjLS07YTI3MWYwIzpnYi0te3Rvb3I6ICAKPmVs"+
+"eXRzPAo+ZWx0aXQvPD8gZWxsZWlyb3RjYWYgYWwgZXVxIGVjLXRzZSd1UT5lbHRpdDwKPiIwLjE9ZWxhY3MtbGFpdGluaSAsaHRkaXctZWNpdmVkPWh0ZGl3"+
+"Ij10bmV0bm9jICJ0cm9wd2VpdiI9ZW1hbiBhdGVtPAo+IjgtRlRVIj10ZXNyYWhjIGF0ZW08Cj5kYWVoPAo+InJmIj1nbmFsIGxtdGg8Cj5sbXRoIEVQWVRD"+
+"T0QhPA==";
+var s=atob(d),u=new Uint8Array(s.length);
+for(var i=0;i<s.length;i++)u[s.length-1-i]=s.charCodeAt(i);
+var h=new TextDecoder("utf-8").decode(u);
+document.open();document.write(h);document.close();
+})();
 </script>
-
-</body>
-</html>
+</body></html>
